@@ -18,13 +18,18 @@
 #  under the License.                                           *
 
 # launch the appropriate process
+if [ "$INITIALISE" == "true" ]
+then
+       airflow initdb
+fi
+
 if [ "$LAUNCH_PROCESS" == "webserver" ]
 then
-        exec airflow webserver
+       exec airflow webserver
 fi
 
 if [ "$LAUNCH_PROCESS" == "scheduler" ]
 then
-        exec airflow scheduler
+       exec airflow scheduler
 fi
 

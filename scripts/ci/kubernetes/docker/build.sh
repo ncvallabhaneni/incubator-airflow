@@ -20,7 +20,7 @@
 IMAGE=${1:-airflow}
 TAG=${2:-latest}
 DIRNAME=$(cd "$(dirname "$0")"; pwd)
-AIRFLOW_ROOT="$DIRNAME/../../../.."
+AIRFLOW_ROOT=$(cd $pwd../../../../; pwd)
 
 ENVCONFIG=$(minikube docker-env)
 if [ $? -eq 0 ]; then
@@ -30,8 +30,9 @@ fi
 echo "Airflow directory $AIRFLOW_ROOT"
 echo "Airflow Docker directory $DIRNAME"
 
+export SLUGIFY_USES_TEXT_UNIDECODE=yes
 cd $AIRFLOW_ROOT
-python setup.py sdist -q
+python3.6 setup.py sdist -q
 echo "Copy distro $AIRFLOW_ROOT/dist/*.tar.gz ${DIRNAME}/airflow.tar.gz"
 cp $AIRFLOW_ROOT/dist/*.tar.gz ${DIRNAME}/airflow.tar.gz
 cd $DIRNAME && docker build --pull $DIRNAME --tag=${IMAGE}:${TAG}

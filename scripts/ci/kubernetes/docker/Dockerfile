@@ -19,6 +19,8 @@ FROM ubuntu:16.04
 
 ENV SLUGIFY_USES_TEXT_UNIDECODE=yes
 
+ENV LAUNCH_PROCESS=webserver
+
 # install deps
 RUN apt-get update -y && apt-get install -y \
         wget \
@@ -46,9 +48,13 @@ RUN pip install -U setuptools && \
 COPY airflow.tar.gz /tmp/airflow.tar.gz
 RUN pip install /tmp/airflow.tar.gz
 
+COPY airflow.cfg /root/airflow/airflow.cfg
+
 COPY airflow-test-env-init.sh /tmp/airflow-test-env-init.sh
 
 COPY bootstrap.sh /bootstrap.sh
 RUN chmod +x /bootstrap.sh
 
 ENTRYPOINT ["/bootstrap.sh"]
+
+

@@ -2,16 +2,6 @@ version: '2.1'
 
 services:
 
-  airflow-webserver:
-    image: airflow:latest
-    environment:
-      LAUNCH_PROCESS: webserver
-    ports:
-      - "8080:8080"
-    depends_on:
-      postgres-airflow:
-        condition: service_healthy
-
 
   postgres-airflow:
     image: postgres
@@ -28,8 +18,11 @@ services:
       timeout: 5s
       retries: 5
 
-  airflow-redis:
-    image: redis
-    ports:
-      - 6379:6379
+  airflow-db-initialiser:
+    image: airflow:latest
+    environment:
+      INITIALISE: "true"
+    depends_on:
+      postgres-airflow:
+        condition: service_healthy
 
