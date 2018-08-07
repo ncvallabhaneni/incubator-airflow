@@ -1,0 +1,34 @@
+version: '2.1'
+
+services:
+
+  airflow-webserver:
+    image: airflow:latest
+    environment:
+      LAUNCH_PROCESS: webserver
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres-airflow:
+        condition: service_healthy
+
+
+  postgres-airflow:
+    image: postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: airflow
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  airflow-redis:
+    image: redis
+    ports:
+      - 6379:6379

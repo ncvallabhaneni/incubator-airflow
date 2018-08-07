@@ -1,0 +1,22 @@
+---
+# docker-engine is the default package name
+docker_pkg_name: docker-engine
+docker_apt_cache_valid_time: 600
+
+# Place to get apt repository key
+apt_key_url: hkp://p80.pool.sks-keyservers.net:80
+# apt repository key signature
+apt_key_sig: 58118E89F3A912897C070ADBF76221572C52609D
+# Name of the apt repository for docker
+apt_repository: deb https://apt.dockerproject.org/repo {{ ansible_lsb.id|lower }}-{{ ansible_lsb.codename|lower }} main
+# The following help expose a docker port or to add additional options when
+# running docker daemon.  The default is to not use any special options.
+#docker_opts: >
+#  -H unix://
+#  -H tcp://0.0.0.0:2375
+#  --log-level=debug
+docker_opts: ""
+# List of users to be added to 'docker' system group (disabled by default)
+# SECURITY WARNING:
+# Be aware that granted users can easily get full root access on the docker host system!
+docker_group_members: []

@@ -1,0 +1,27 @@
+---
+
+- lineinfile:
+    dest: /etc/default/grub
+    state: present
+    regexp: ^GRUB_CMDLINE_LINUX_DEFAULT=
+    line: 'GRUB_CMDLINE_LINUX_DEFAULT="console=tty1 console=ttyS0 earlyprintk=ttyS0 rootdelay=300 cgroup_enable=memory swapaccount=1"'
+  register: grub_default
+
+- lineinfile:
+    dest: /etc/default/grub
+    state: present
+    regexp: ^GRUB_CMDLINE_LINUX=
+    line: 'GRUB_CMDLINE_LINUX="cgroup_enable=memory swapaccount=1"'
+  register: grub
+
+- name: Upgrade grub configuration
+  command: update-grub
+  when: grub.changed or grub_default.changed
+
+- name: Restart server
+  command: /usr/bin/systemd-run --on-active=10 /bin/systemctl reboot
+  when: grub.changed or grub_default.changed
+
+- name: waiting 3 minutes for server to come back
+  local_action: wait_for timeout=180
+  when: grub.changed or grub_default.changed

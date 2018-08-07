@@ -39,7 +39,6 @@ RUN pip install --upgrade pip
 
 # Since we install vanilla Airflow, we also want to have support for Postgres and Kubernetes
 RUN pip install -U setuptools && \
-    pip install kubernetes && \
     pip install cryptography && \
     pip install psycopg2-binary==2.7.4  # I had issues with older versions of psycopg2, just a warning
 
